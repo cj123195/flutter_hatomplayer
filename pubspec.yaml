@@ -1,6 +1,10 @@
 name: flutter_hatomplayer
 description: A new Flutter plugin.
 version: 0.0.1
+homepage: https://github.com/cj123195/flutter_hatomplayer
+repository: https://github.com/cj123195/flutter_hatomplayer
+issue_tracker: https://github.com/cj123195/flutter_hatomplayer/issues
+documentation: https://github.com/cj123195/flutter_hatomplayer
 
 environment:
   sdk: '>=3.3.3 <4.0.0'

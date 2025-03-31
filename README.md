@@ -68,49 +68,49 @@ dependencies:
 
 - iOS
 
-  1.  在 Flutter 示例 demo 的`example/ios/Frameworks`文件夹中，可查看到`hatomplayer_core.framework`以及`hatomplayer-core.podspec`两个文件，在`example/ios/Podfile`中，需要将该 framework 进行引入，引入方式如下图所示：
+    1.  在 Flutter 示例 demo 的`example/ios/Frameworks`文件夹中，可查看到`hatomplayer_core.framework`以及`hatomplayer-core.podspec`两个文件，在`example/ios/Podfile`中，需要将该 framework 进行引入，引入方式如下图所示：
 
-      ![](snapshot/1.0.0/1.png)
+        ![](snapshot/1.0.0/1.png)
 
-  1.  在 Build Settings 中将 Enable Bitcode 关闭。
-  1.  在 Info 中添加隐私权限(对讲需要开启⻨克⻛)。
+    1.  在 Build Settings 中将 Enable Bitcode 关闭。
+    1.  在 Info 中添加隐私权限(对讲需要开启⻨克⻛)。
 
 - Android
 
-  1.  导入示例 demo 的`example/android/app/src/main/jniLibs`文件夹中的 so 库文件到自己创建的 Flutter 项目的 android 工程中的相同位置：
-      ![](snapshot/1.0.0/3.png)
-  2.  到自己创建的 Flutter 项目的 android 工程中的 app 模块的`build.gradle`文件中配置 NDK 文件夹：
-      `java ndk{ abiFilters 'arm64-v8a','armeabi-v7a' } `
-      ![](snapshot/1.0.0/4.png)
-      _注意_： 由于 Android 官方已不再支持生成 ABI 为:'armeabi'的 so 库，因此海康威视不再提供'armeabi'的
-      so 库。如果您的项目中引用了其他三方'armeabi'的 so 库，可以将'armeabi'的 so 库直接置于'armeabi-v7a'中。如果您的项目中存在多种 ABI 文件夹，例如同时存在'armeabi'和'armeabi-v7a'文件夹，您必须保证项目中的各个 ABI 文件夹都有一份相应 ABI 格式的 so 库。建议您只需要保留 ABI 为'armeabi-v7a'的 so 即可。arm64-v8a 同理。
+    1.  导入示例 demo 的`example/android/app/src/main/jniLibs`文件夹中的 so 库文件到自己创建的 Flutter 项目的 android 工程中的相同位置：
+        ![](snapshot/1.0.0/3.png)
+    2.  到自己创建的 Flutter 项目的 android 工程中的 app 模块的`build.gradle`文件中配置 NDK 文件夹：
+        `java ndk{ abiFilters 'arm64-v8a','armeabi-v7a' } `
+        ![](snapshot/1.0.0/4.png)
+        _注意_： 由于 Android 官方已不再支持生成 ABI 为:'armeabi'的 so 库，因此海康威视不再提供'armeabi'的
+        so 库。如果您的项目中引用了其他三方'armeabi'的 so 库，可以将'armeabi'的 so 库直接置于'armeabi-v7a'中。如果您的项目中存在多种 ABI 文件夹，例如同时存在'armeabi'和'armeabi-v7a'文件夹，您必须保证项目中的各个 ABI 文件夹都有一份相应 ABI 格式的 so 库。建议您只需要保留 ABI 为'armeabi-v7a'的 so 即可。arm64-v8a 同理。
 
-  3.  到自己创建的 Flutter 项目的 android 工程中的 app 模块的`build.gradle`文件中配置混淆，混淆文件参考示例 demo 的`example/android/app`文件夹中的`proguard-rules.pro`文件：
-      ```java
-          buildTypes {
-              release {
-                  //是否zip对齐
-                  zipAlignEnabled true
-                  // 缩减resource文件
-                  shrinkResources false
-                  //Proguard
-                  minifyEnabled true
-                  debuggable false
-                  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                  //签名
-                  signingConfig signingConfigs.config
-              }
-              debug {
-                  //给applicationId添加后缀“.debug”
-                  applicationIdSuffix ".debug"
-                  buildConfigField "boolean", "LOG_DEBUG", "true"
-                  zipAlignEnabled false
-                  shrinkResources false
-                  minifyEnabled false
-                  debuggable true
-              }
-          }
-      ```
+    3.  到自己创建的 Flutter 项目的 android 工程中的 app 模块的`build.gradle`文件中配置混淆，混淆文件参考示例 demo 的`example/android/app`文件夹中的`proguard-rules.pro`文件：
+        ```java
+            buildTypes {
+                release {
+                    //是否zip对齐
+                    zipAlignEnabled true
+                    // 缩减resource文件
+                    shrinkResources false
+                    //Proguard
+                    minifyEnabled true
+                    debuggable false
+                    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                    //签名
+                    signingConfig signingConfigs.config
+                }
+                debug {
+                    //给applicationId添加后缀“.debug”
+                    applicationIdSuffix ".debug"
+                    buildConfigField "boolean", "LOG_DEBUG", "true"
+                    zipAlignEnabled false
+                    shrinkResources false
+                    minifyEnabled false
+                    debuggable true
+                }
+            }
+        ```
 
 ### 3.3 初始化
 
