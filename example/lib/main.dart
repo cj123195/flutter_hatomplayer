@@ -18,15 +18,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: "/", // 默认加载的界面，这里为RootPage
-      routes: { // 显式声明路由
-        "/realplay":(context) => const RealplayPage(),
-        "/playback":(context) => const PlaybackPage(),
-        "/playfile":(context) => const PlayFilePage()
+      routes: {
+        // 显式声明路由
+        "/realplay": (context) => const RealplayPage(),
+        "/playback": (context) => const PlaybackPage(),
+        "/playfile": (context) => const PlayFilePage()
       },
       home: const MainPage(),
       builder: EasyLoading.init(builder: (context, widget) {

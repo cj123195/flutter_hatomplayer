@@ -50,61 +50,62 @@ class _PlayFilePageState extends State<PlayFilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('录像文件'),
-          ),
-          body: Column(
-            children: [
-              _buildVideoWidget(),
-              Row(
-                children: [
-                  Expanded(
-                      child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                        trackShape: const RectangularSliderTrackShape(),
-                        overlayColor: Colors.transparent,
-                        overlayShape:
-                            const RoundSliderOverlayShape(overlayRadius: 0),
-                        thumbShape:
-                            const RoundSliderThumbShape(enabledThumbRadius: 10),
-                        trackHeight: 10,
-                        showValueIndicator: ShowValueIndicator.always,
-                        valueIndicatorColor: Colors.white,
-                        valueIndicatorTextStyle: const TextStyle(
-                            color: Colors.black87, fontSize: 16)),
-                    child: Slider(
-                      value: progress,
-                      max: 1,
-                      onChanged: (value) async {
-                        if (value < 0 || value > 1) {
-                          return;
-                        }
-                        progress = value;
-                        isSeeking = true;
-                        setState(() {});
-                      },
-                      onChangeEnd: (value) async {
-                        if (value < 0 || value > 1) {
-                          return;
-                        }
-                        // 定位到拖动的时间点
-                        await player?.setCurrentFrame(value);
-                        isSeeking = false;
-                      },
-                    ),
-                  ))
-                ],
-              )
-            ],
-          ),
+    return PopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('录像文件'),
         ),
-        onWillPop: onWillPop);
+        body: Column(
+          children: [
+            _buildVideoWidget(),
+            Row(
+              children: [
+                Expanded(
+                    child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                      trackShape: const RectangularSliderTrackShape(),
+                      overlayColor: Colors.transparent,
+                      overlayShape:
+                          const RoundSliderOverlayShape(overlayRadius: 0),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 10),
+                      trackHeight: 10,
+                      showValueIndicator: ShowValueIndicator.always,
+                      valueIndicatorColor: Colors.white,
+                      valueIndicatorTextStyle:
+                          const TextStyle(color: Colors.black87, fontSize: 16)),
+                  child: Slider(
+                    value: progress,
+                    max: 1,
+                    onChanged: (value) async {
+                      if (value < 0 || value > 1) {
+                        return;
+                      }
+                      progress = value;
+                      isSeeking = true;
+                      setState(() {});
+                    },
+                    onChangeEnd: (value) async {
+                      if (value < 0 || value > 1) {
+                        return;
+                      }
+                      // 定位到拖动的时间点
+                      await player?.setCurrentFrame(value);
+                      isSeeking = false;
+                    },
+                  ),
+                ))
+              ],
+            )
+          ],
+        ),
+      ),
+      onPopInvoked: onWillPop,
+    );
   }
 
   /// 返回上一页
-  Future<bool> onWillPop() async {
+  Future<bool> onWillPop(bool pop) async {
     if (Navigator.canPop(context)) {
       // 停止播放
       await player?.stop();
@@ -159,7 +160,7 @@ class _PlayFilePageState extends State<PlayFilePage> {
           switch (event.event) {
             case EVENT_PLAY_SUCCESS:
               errorCode = null;
-              videoSize = Size(667, 375);
+              videoSize = const Size(667, 375);
               EasyLoading.showToast('播放成功');
               // 获取录像文件总时间
               totalTime = await player?.getTotalTime();
@@ -204,13 +205,13 @@ class _PlayFilePageState extends State<PlayFilePage> {
     } else {
       debugPrint('=========初始化失败=======');
     }
-    var appDocDir;
+    Directory? appDocDir;
     if (Platform.isAndroid) {
       appDocDir = await getExternalStorageDirectory();
     } else {
       appDocDir = await getTemporaryDirectory();
     }
-    var recordFilePath = appDocDir.path + "/temp.mp4";
+    var recordFilePath = appDocDir!.path + "/temp.mp4";
     await player?.playFile(recordFilePath);
   }
 }

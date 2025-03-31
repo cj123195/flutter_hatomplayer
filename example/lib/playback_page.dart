@@ -23,7 +23,9 @@ class PlaybackPage extends StatefulWidget {
 
 class _PlaybackPageState extends State<PlaybackPage> {
   /// 回放url
-  static const String playUrl = 'rtsp://10.66.165.106:655/EUrl/iB9RU3u/mark/c3RvcmFnZU9wdGltaXplPTEmbWVkaWFPcHRpbWl6ZT0x';
+  static const String playUrl =
+      'rtsp://10.66.165.106:655/EUrl/iB9RU3u/mark/c3RvcmFnZU9wdGltaXplPTEmbWVkaWFPcHRpbWl6ZT0x';
+
   /// 回放url输入框控制器
   final TextEditingController playUrlController =
       TextEditingController(text: playUrl);
@@ -307,13 +309,13 @@ class _PlaybackPageState extends State<PlaybackPage> {
             color: Colors.blue,
             onPressed: () async {
               if (await Permission.storage.request().isGranted) {
-                var appDocDir;
+                Directory? appDocDir;
                 if (Platform.isAndroid) {
                   appDocDir = await getExternalStorageDirectory();
                 } else {
                   appDocDir = await getTemporaryDirectory();
                 }
-                String savePath = appDocDir.path + "/temp.mp4";
+                String savePath = appDocDir!.path + "/temp.mp4";
                 debugPrint('录像保存路径是：$savePath');
                 int? ret = await player?.startRecord(savePath);
                 if (ret == 0) {
@@ -433,7 +435,7 @@ class _PlaybackPageState extends State<PlaybackPage> {
         ),
       ],
     );
-    return WillPopScope(
+    return PopScope(
         child: Scaffold(
           appBar: AppBar(
             title: const Text('录像回放'),
@@ -508,11 +510,11 @@ class _PlaybackPageState extends State<PlaybackPage> {
             ],
           ),
         ),
-        onWillPop: onWillPop);
+        onPopInvoked: onWillPop);
   }
 
   /// 返回上一页
-  Future<bool> onWillPop() async {
+  Future<bool> onWillPop(bool pop) async {
     if (Navigator.canPop(context)) {
       // 停止播放
       await player?.stop();
@@ -576,7 +578,7 @@ class _PlaybackPageState extends State<PlaybackPage> {
           switch (event.event) {
             case EVENT_PLAY_SUCCESS:
               errorCode = null;
-              videoSize = Size(667, 375);
+              videoSize = const Size(667, 375);
               EasyLoading.showToast('播放成功');
               timer = Timer.periodic(const Duration(seconds: 1), (t) async {
                 // 获取当前播放的画面时间

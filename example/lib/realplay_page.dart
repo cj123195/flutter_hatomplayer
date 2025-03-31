@@ -21,7 +21,8 @@ class RealplayPage extends StatefulWidget {
 
 class _RealplayPageState extends State<RealplayPage> {
   /// 预览url
-  static const String playUrl = 'rtsp://10.19.223.40:655/EUrl/vsig8IVfXVe3c47ae29f896426b8d9a7';
+  static const String playUrl =
+      'rtsp://10.19.223.40:655/EUrl/vsig8IVfXVe3c47ae29f896426b8d9a7';
 
   // static const String playUrl =
   //     'rtsp://admin:Hik12345@10.196.75.182:21454/ch1/sub/av_stream';
@@ -295,13 +296,13 @@ class _RealplayPageState extends State<RealplayPage> {
             color: Colors.blue,
             onPressed: () async {
               if (await Permission.storage.request().isGranted) {
-                var appDocDir;
+                Directory? appDocDir;
                 if (Platform.isAndroid) {
                   appDocDir = await getExternalStorageDirectory();
                 } else {
                   appDocDir = await getTemporaryDirectory();
                 }
-                recordFilePath = appDocDir.path + "/temp.mp4";
+                recordFilePath = appDocDir!.path + "/temp.mp4";
                 debugPrint('录像保存路径是：$recordFilePath');
                 int? ret = await player?.startRecord(recordFilePath!);
                 if (ret == 0) {
@@ -339,8 +340,8 @@ class _RealplayPageState extends State<RealplayPage> {
         ),
       ],
     );
-    return WillPopScope(
-      onWillPop: onWillPop,
+    return PopScope(
+      onPopInvoked: onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('实时预览'),
@@ -416,7 +417,7 @@ class _RealplayPageState extends State<RealplayPage> {
   }
 
   /// 返回上一页
-  Future<bool> onWillPop() async {
+  Future<bool> onWillPop(bool pop) async {
     if (Navigator.canPop(context)) {
       // 停止播放
       await player?.stop();
@@ -469,7 +470,7 @@ class _RealplayPageState extends State<RealplayPage> {
           switch (event.event) {
             case EVENT_PLAY_SUCCESS:
               errorCode = null;
-              videoSize = Size(667, 375);
+              videoSize = const Size(667, 375);
               EasyLoading.showToast('播放成功');
               timer = Timer.periodic(const Duration(seconds: 1), (t) async {
                 await calculateTraffic();
